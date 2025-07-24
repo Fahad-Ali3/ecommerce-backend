@@ -7,6 +7,7 @@ This project is designed as a robust foundation for modern online stores, suppor
 
 ---
 **🚧 THIS PROJECT IS STILL IN DEVELOPMENT — BUGS & ISSUES MAY EXIST AND WILL BE FIXED CONTINUOUSLY 🚧**
+
 ---
 
 
