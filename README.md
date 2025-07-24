@@ -74,8 +74,3 @@ All endpoints have been tested using **Postman** collections to ensure reliabili
 
 ---
 
-## 🚦 Getting Started
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/your-username/your-repo.git
