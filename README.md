@@ -14,7 +14,8 @@ This project is designed as a robust foundation for modern online stores, suppor
 ## ✨ Features
 
 ✅ **Spring Boot & Spring Data JPA** — Rapid development with powerful ORM support using **MySQL**.  
-✅ **JWT-Based Security** — Secure authentication & role-based authorization.  
+✅ **JWT + Refresh Token Authentication** – Secure login with token renewal mechanism  
+✅ **Role-Based Access Control** – Authorization based on roles: `USER` and `ADMIN`  
 ✅ **RESTful APIs** — Clean REST architecture with CRUD operations for all core entities.  
 ✅ **Payment Integration** — Seamless payment processing using **Stripe**.  
 ✅ **DTOs & Manual Mapping** — Data Transfer Objects for clean API contracts and clear separation of concerns.  
