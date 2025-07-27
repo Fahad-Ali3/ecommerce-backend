@@ -2,9 +2,9 @@ package com.ecommerce.backend.controllers;
 
 
 import com.ecommerce.backend.dto.UserDTO;
-import com.ecommerce.backend.model.JwtRequest;
-import com.ecommerce.backend.model.JwtResponse;
+import com.ecommerce.backend.model.*;
 import com.ecommerce.backend.security.JwtHelper;
+import com.ecommerce.backend.service.RefreshTokenService;
 import com.ecommerce.backend.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -42,6 +42,9 @@ public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private RefreshTokenService tokenService;
+
 
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> createToken(@Valid @RequestBody JwtRequest request){
@@ -50,8 +53,12 @@ public class AuthController {
         UserDetails userDetails=this.userDetailsService.loadUserByUsername(request.getUsername());
 
         String token=jwtHelper.generateToken(userDetails);
+
+        User user=(User) userDetails;
+        RefreshToken refreshToken= tokenService.createRefreshToken(user);
         JwtResponse response=new JwtResponse();
         response.setToken(token);
+        response.setRefreshToken(refreshToken.getToken());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -72,7 +79,20 @@ public class AuthController {
         }catch (DisabledException e){
             throw new DisabledException("User is disabled...");
         }
+    }
 
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody TokenRefreshRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return tokenService.findByToken(requestRefreshToken)
+                .map(tokenService::verifyExpiration)
+                .map(RefreshToken::getUser)
+                .map(user -> {
+                    String newAccessToken = jwtHelper.generateToken(user);
+                    return ResponseEntity.ok(new TokenRefreshResponse(newAccessToken, requestRefreshToken));
+                })
+                .orElseThrow(() -> new RuntimeException("Refresh token not found"));
     }
 
 }
